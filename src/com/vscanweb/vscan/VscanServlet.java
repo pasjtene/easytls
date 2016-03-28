@@ -70,7 +70,7 @@ public class VscanServlet extends HttpServlet {
     	if (targetUrl.length() > 12){
 			 dispatcher.forward(request, response);
     	} else {
-    		urlError = "You must provide a Valid https URL";
+    		urlError = "please provide a Valid https URL";
     		writeForm(out, targetUrl, urlError, protocol, protocolError);
     		
     	} 
@@ -85,16 +85,20 @@ public class VscanServlet extends HttpServlet {
 	    	out.write("<html xmlns=\"http://www.w3.org/1999/xhtml\">".getBytes());
 	    	out.write("<head>".getBytes());
 	    	out.write("<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\">".getBytes());
+	    	//out.write("<link rel='stylesheet' type='text/css' href='\" + request.getContextPath() +  \"vscanstyle.css' />".getBytes());
+	    	
 	    	out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />".getBytes());
 	    	out.write("<title>SSL/TLS Ciphers Test</title>".getBytes());
 	    	out.write("<script src=\"https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js\"></script>".getBytes());
 	    	out.write("</head>".getBytes());
 	    	out.write("<body>".getBytes());
 	    	out.write("<div class=\"container\">".getBytes());
+	    	out.write("<h1> Welcome to EasyTLS version 0.5 </h1>".getBytes());
+	    	out.write("<h3>EasyTLS is a user friendly SSL/TLS testing software. Lots of cool new features will be added soon.</h3>".getBytes());
 	    	out.write("<form method = \"post\" action =\"/Vscan/VscanServlet\">".getBytes());
 	    	out.write("<div class=\"form-group\">".getBytes());
 	    	out.write("<div class=\"col-xs-5\">".getBytes());
-	    	out.write(("enter The URL to Scan: <input type = \"text\" name= \"targetUrl\" class=\"form-control\" value = \""+targetUrl+ "\"/>" + urlError + "<br/>").getBytes());
+	    	out.write(("Enter a URL to Scan: <input type = \"text\" name= \"targetUrl\" class=\"form-control\" value = \""+targetUrl+ "\"/>" + urlError + "<br/>").getBytes());
 	    	out.write(("</div>").getBytes());
 	    	out.write(("</div>").getBytes());
 	    	

@@ -1,0 +1,8 @@
+@CHARSET "ISO-8859-1";
+.containerNew {
+  background-color: green;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
