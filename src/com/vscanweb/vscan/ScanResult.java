@@ -61,7 +61,7 @@ public class ScanResult extends HttpServlet {
      HttpSession session = request.getSession(true);
         session.setAttribute("targetUrl", targetUrl);
         out.write("<div class=\"container\">".getBytes());
-       String s1 = "<html><head><title>SSL/TLS Ciphers test</title>" + "</head><body><h1 style=\"color:blue;\">The target URL is: </style></h1>" + targetUrl+"</body></html>";
+       String s1 = "<html><head><title>SSL/TLS Ciphers test</title>" + "</head><body><h3 style=\"color:blue;\">The target URL is: </style></h3>" + targetUrl+"</body></html>";
        out.write(s1.getBytes());
        // out.write(result.getBytes());
        
@@ -101,7 +101,16 @@ public class ScanResult extends HttpServlet {
       //sslTlsVersions.add("TLSv1.2");
       
       sslTlsVersions.add(protocol);
-        
+      out.write("<table class=\"table table-hover\">".getBytes());
+      out.write("<thead>".getBytes());
+      out.write("<tr>".getBytes());
+      out.write("<th>No.</th>".getBytes());
+      out.write("<th>Cipher Suite</th>".getBytes());
+      out.write("</tr>".getBytes());
+      out.write("</thead>".getBytes());
+      out.write("</tbody>".getBytes());
+     
+      out.flush();
         //String protocol = "SSLv3";
         for (String Protocol: sslTlsVersions) {
             System.out.println();
@@ -155,9 +164,20 @@ public class ScanResult extends HttpServlet {
                             numberOfCiphers += 1;
                             
                              String out3 = numberOfCiphers +": ";
-                        out.write(out3.getBytes());
-                        String out4 = successfulCipher + "<br/>";
-                            out.write(out4.getBytes());
+                             out.write("<tr>".getBytes());
+                             out.write("<td>".getBytes());
+                              out.write(out3.getBytes());
+                        out.write("</td>".getBytes());
+                        out.flush();
+                        
+                        String out4 = successfulCipher;
+                        
+                        
+                        out.write("<td>".getBytes());
+                        out.write(out4.getBytes());
+                  out.write("</td>".getBytes());
+                  out.write("</tr>".getBytes());
+                  
                             
                        
                         out.flush();
@@ -165,6 +185,10 @@ public class ScanResult extends HttpServlet {
                         }
                         
                     } 
+                     out.write("</tbody>".getBytes());    
+                     
+                     out.write("</table>".getBytes());
+                     out.flush();
                      out2 = "<br/> Number of Cipher suites supported by " + targetUrl+ "  with: " + Protocol + ": " + numberOfCiphers + "<br/>";
                      out.write(out2.getBytes());
                      
