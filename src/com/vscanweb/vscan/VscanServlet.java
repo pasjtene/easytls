@@ -54,27 +54,33 @@ public class VscanServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		OutputStream out = response.getOutputStream();
-    	String targetUrl = request.getParameter("targetUrl");
-    	String protocol = request.getParameter("protocol");
-    	String urlError = request.getParameter("urlError");
-    	//String protocol = "";
-    	String protocolError = "";
-    	RequestDispatcher dispatcher = request.getRequestDispatcher("/ScanResult");
-    	//UrlValidator urlValidator = new UrlValidator();
-    	
-    	if(!targetUrl.contains("https://")){
-    		targetUrl = "https://"+ targetUrl;
-    	}
-    	
-    	
-    	if (targetUrl.length() > 12){
-			 dispatcher.forward(request, response);
-    	} else {
-    		urlError = "please provide a Valid https URL";
-    		writeForm(out, targetUrl, urlError, protocol, protocolError);
-    		
-    	} 
-    	
+		String targetUrl = request.getParameter("targetUrl");
+		String protocol = request.getParameter("protocol");
+		String urlError = request.getParameter("urlError");
+		//String protocol = "";
+		String protocolError = "";
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/ScanResult");
+		//UrlValidator urlValidator = new UrlValidator();
+
+		if(!targetUrl.contains("https://")){
+			targetUrl = "https://"+ targetUrl;
+		}
+
+
+		if (targetUrl.length() > 12){
+			//DefaultPortScan.scan(targetUrl);
+			if(DefaultPortScan.tlsPortisOpen(targetUrl))
+			dispatcher.forward(request, response);
+			else {
+				urlError = "Destination URL not listening on port 443 or not reachable from here";
+				writeForm(out, targetUrl, urlError, protocol, protocolError);
+			}
+		} else {
+			urlError = "please provide a Valid https URL";
+			writeForm(out, targetUrl, urlError, protocol, protocolError);
+
+		} 
+
 	} //end doPost 
 	
 	
@@ -98,7 +104,7 @@ public class VscanServlet extends HttpServlet {
 	    	out.write("<form method = \"post\" action =\"/Vscan/VscanServlet\">".getBytes());
 	    	out.write("<div class=\"form-group\">".getBytes());
 	    	out.write("<div class=\"col-xs-5\">".getBytes());
-	    	out.write(("Enter a URL to Scan: <input type = \"text\" name= \"targetUrl\" class=\"form-control\" value = \""+targetUrl+ "\"/>" + urlError + "<br/>").getBytes());
+	    	out.write(("Enter a URL to Scan: <input type = \"text\" name= \"targetUrl\" class=\"form-control\" value = \""+targetUrl+ "\"/>" +"<font size=\"3\" color=\"red\">"  + urlError +   "</font><br/>").getBytes());
 	    	out.write(("</div>").getBytes());
 	    	out.write(("</div>").getBytes());
 	    	

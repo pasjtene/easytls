@@ -52,17 +52,20 @@ public class ScanResult extends HttpServlet {
     	String urlError = request.getParameter("urlError");
     	String protocol = request.getParameter("protocol");
     	String protocolError = "";
+    	
     	if(!targetUrl.contains("https://")){
     		targetUrl = "https://"+ targetUrl;
     	}
+    	
     	VscanServlet.writeForm(out, targetUrl, "", protocol, "");
     	
         System.out.println("Target: " + targetUrl );
      HttpSession session = request.getSession(true);
         session.setAttribute("targetUrl", targetUrl);
         out.write("<div class=\"container\">".getBytes());
-       String s1 = "<html><head><title>SSL/TLS Ciphers test</title>" + "</head><body><h3 style=\"color:blue;\">The target URL is: </style></h3>" + targetUrl+"</body></html>";
+       String s1 = "<html><head><title>SSL/TLS Ciphers test</title>" + "</head><body>The target URL is: " + targetUrl+"</body></html>";
        out.write(s1.getBytes());
+      // DefaultPortScan.scan(targetUrl);
        // out.write(result.getBytes());
        
     	// Begin C1 - The goal of this is to allow connection to some sites with invalid cert.
