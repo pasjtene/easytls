@@ -152,44 +152,63 @@ public class Vscan {
     } // End VscanMain
     
     // start
-    public String connectToUrlForCVE(String https_url) {
-        //This is the main method for connecting to a target URL and collecting the cipher suite used
-        URL url;
-        String cs = "";
-         try {
-            url = new URL(https_url);
-            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-                      
-            if (con != null) {
-            try {
-                System.out.print(": Response Code: " + con.getResponseCode());
-                String ciphersuite = con.getCipherSuite();
-                if (ciphersuite.length() == 0 | ciphersuite == null) {
-                    System.out.println(" Failed");
-                } else {
-                    System.out.println(": Success");
-                    cs = ciphersuite;
-                 }                                          
-               
-            } catch (SSLPeerUnverifiedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                //e.printStackTrace();
-                System.out.println(": Failed");
-                
-            }                                     
-        }
-            
-        } catch (MalformedURLException e) {
-            //e.printStackTrace();
-            System.out.println("Malformed URL 1");
-            return "";
-        }catch (IOException e){
-            //e.printStackTrace();
-            System.out.println("Malformed URL 2");
-            return "";
-        }
-        return cs;
+    public String connectToUrlForCVE(String https_url) throws Exception {
+    	//This is the main method for connecting to a target URL and collecting the cipher suite used
+    	System.out.println("\n Entering connectToUrlForCVE ");
+
+    	URL url = null;
+    	String cs = "";
+    	HttpsURLConnection con = null;
+    	
+    	try {
+    		url = new URL(https_url);
+    		con = (HttpsURLConnection) url.openConnection();
+    		con.setConnectTimeout(3000);
+    		con.setReadTimeout(1000);
+    		int rc = con.getResponseCode();
+    		
+    		
+    			try {
+    				System.out.print(": Response Code: " + con.getResponseCode());
+    				System.out.println("\n Getting Cipher suite ");
+    				String ciphersuite = con.getCipherSuite();
+    				
+    				if (ciphersuite.length() == 0 || ciphersuite == null) {
+    					System.out.println(" Failed");
+    				} else {
+    					System.out.println(": Success");
+    					cs = ciphersuite;
+    				}                                          
+
+    			} catch (SSLPeerUnverifiedException e) {
+    				e.printStackTrace();
+    			} catch (Exception e) {
+    				//printStackTrace();
+    				System.out.println(": Failed Timeout");
+    				//con.disconnect();
+    			}   
+    			
+
+    	} catch (MalformedURLException e) {
+    		//e.printStackTrace();
+    		System.out.println("Malformed URL 1");
+    		return "";
+    	}catch (javax.net.ssl.SSLException e){
+    		//e.printStackTrace();
+    		System.out.println(": Failed SSL");
+    		//con.disconnect();
+    		return "";
+    	} catch (IOException e) {
+
+    		//e.printStackTrace();
+    		System.out.println(": Failed to Read");
+    		//con.disconnect();
+    		return "";
+
+    	}
+    	System.out.println("Exiting connectToUrlForCVE ");
+    	return cs;
+
     }
     //end
     

@@ -56,14 +56,31 @@ public class ScanResult extends HttpServlet {
     	if(!targetUrl.contains("https://")){
     		targetUrl = "https://"+ targetUrl;
     	}
-    	
-    	VscanServlet.writeForm(out, targetUrl, "", protocol, "");
+    	 //String s0 = "<html><head><title>SSL/TLS Ciphers test</title>" +" <script src = \"SelectedProtocol.js\"></script>" + "</head><body>The target URL is: " + targetUrl+"</body></html>";
+    	 //out.write(s0.getBytes());
+    	 //out.flush();
+    	 VscanServlet.writeForm(out, targetUrl, "", protocol, "");
+    	 String ljs= "<script> document.onload = document.getElementById('protocolid').value=" + "\""+ protocol  +"\""+ " </script>;";
+    	 out.write(ljs.getBytes());
+    	 /*
+    	String js0 = " <script> function SelectElement("+protocol+")" +
+    	  " { var element = document.getElementById('protocolid');" +
+    	     "element.value =" + "\""+ protocol  +"\""+ " ;" +
+    	 " } window.onload = SelectElement("+" \" "+protocol+" \" "+ " ) </script> ";
+    	out.write(js0.getBytes());
+    	*/
+    	 //String js1 = "<script> window.onload = SelectElement("+protocol+" ) </script>";
+    	 //out.write(js1.getBytes());
+    	 out.flush();
     	
         System.out.println("Target: " + targetUrl );
-     HttpSession session = request.getSession(true);
-        session.setAttribute("targetUrl", targetUrl);
+     //HttpSession session = request.getSession(true);
+        //session.setAttribute("targetUrl", targetUrl);
         out.write("<div class=\"container\">".getBytes());
-       String s1 = "<html><head><title>SSL/TLS Ciphers test</title>" + "</head><body>The target URL is: " + targetUrl+"</body></html>";
+       //String s1 = "<html><head><title>SSL/TLS Ciphers test</title>" +" <script src = \"SelectedProtocol.js\"></script>" + "</head><body>The target URL is: " + targetUrl+"</body></html>";
+    
+    String s1 = "The target URL is: " + targetUrl ;
+    
        out.write(s1.getBytes());
       // DefaultPortScan.scan(targetUrl);
        // out.write(result.getBytes());
@@ -117,7 +134,7 @@ public class ScanResult extends HttpServlet {
         //String protocol = "SSLv3";
         for (String Protocol: sslTlsVersions) {
             System.out.println();
-            session.setAttribute("protocol", Protocol);
+           // session.setAttribute("protocol", Protocol);
             System.out.println("Testing with protocol "+ Protocol);
             String out1 = " <br /> Connecting with: "+ Protocol;
             out.write(out1.getBytes());
@@ -156,11 +173,13 @@ public class ScanResult extends HttpServlet {
                          //set the current cipher suite as the one for next connection
                          System.setProperty("https.cipherSuites", supportedCiphers[j]);
                          String successfulCipher = "";
+                         
                          try {
                          successfulCipher = new Vscan().connectToUrlForCVE(targetUrl);
                          } catch (Exception e) {
                         	 System.out.println("Something is wrong");
                          }
+                         
                      // Add the successful cipher to the list if the connection did not fail
                         if (successfulCipher.length() != 0){
                             listOfSuccessfulCiphers.add(successfulCipher);
@@ -201,12 +220,13 @@ public class ScanResult extends HttpServlet {
                    System.out.println("\n");
                    System.out.println("Number of cipher suites supported by the target:"+ listOfSuccessfulCiphers.size());
                    System.out.println("List of vulnerabilities and solution containing work around:");
-                   session.setAttribute("listOfSuccessfulCiphers", listOfSuccessfulCiphers);
+                   //session.setAttribute("listOfSuccessfulCiphers", listOfSuccessfulCiphers);
                    
                    //out.println("<html><head><title>List of Ciphers used by Target: </title>" + "</head><body><h1 style=\"color:blue;\">List of Ciphers used by Target: </style></h1>" + listOfSuccessfulCiphers +"</body></html>");
                    String l1 = " <br /> List of Ciphers supported by the target: "+ listOfSuccessfulCiphers;
                    out.write(l1.getBytes());
                    out.write("</div>".getBytes());
+                   out.flush();
                    // send the ArrayList containing the list of Successful Ciphers to the CheckWeakCiphers class for evaluation. a
                   CheckWeackCiphers.parseTargetCipher(listOfSuccessfulCiphers, protocol);
                    // test CBC Vulnerabilities; only check one cipher suite with "CBC"
