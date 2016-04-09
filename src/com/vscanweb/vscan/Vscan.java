@@ -85,9 +85,13 @@ public class Vscan {
         SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
         String supportedCiphers[] = sf.getSupportedCipherSuites();
             
-        /*To get all ciphers, including those that java has disabled by default
-        we need to comment out the line jdk.tls.disabledAlgorithms=MD5, SSLv3, DSA, RSA keySize < 2048
+        /*To get all weak ciphers, including those that java has disabled by default
+        1- we need to comment out the line jdk.tls.disabledAlgorithms=MD5, SSLv3, DSA, RSA keySize < 2048
         in [JAVA_HOME]/jre/lib/security/java.security. For example C:/program file/java/jdk1.8.0//jre/lib/security/java.security
+        
+        2- To Allow the usage of strong ciphers with export restrictions, we need to download "java cryptography extension jce unlimited 
+        strength jurisdiction policy files 8" from http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
+        Then extract two files "local_policy.jar and US_export_polic.jar" and put them in <JAVA_HOME>/lib/security/" by overwriting existing files.
         
         */
                        

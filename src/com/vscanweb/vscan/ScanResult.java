@@ -1,4 +1,8 @@
 package com.vscanweb.vscan;
+/**
+ * @author Pascal Tene
+ * Servlet implementation class ScanResult
+ */
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,9 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Servlet implementation class ScanResult
- */
+
 @WebServlet("/ScanResult")
 public class ScanResult extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -52,6 +54,12 @@ public class ScanResult extends HttpServlet {
     	String urlError = request.getParameter("urlError");
     	String protocol = request.getParameter("protocol");
     	String protocolError = "";
+    	
+    	targetUrl = targetUrl.trim();
+    	targetUrl = targetUrl.toLowerCase();
+    	
+    	if (targetUrl.startsWith("http://"))
+			targetUrl = targetUrl.substring(7);
     	
     	if(!targetUrl.contains("https://")){
     		targetUrl = "https://"+ targetUrl;
@@ -125,7 +133,7 @@ public class ScanResult extends HttpServlet {
       out.write("<thead>".getBytes());
       out.write("<tr>".getBytes());
       out.write("<th>No.</th>".getBytes());
-      out.write("<th>Cipher Suite</th>".getBytes());
+      out.write("<th>Supported Cipher Suites</th>".getBytes());
       out.write("</tr>".getBytes());
       out.write("</thead>".getBytes());
       out.write("</tbody>".getBytes());
@@ -163,17 +171,28 @@ public class ScanResult extends HttpServlet {
                        
                 ArrayList<String>listOfSuccessfulCiphers  = new ArrayList<String>();
                 System.out.println("Testing CipherSuites accepted by tartget please wait...");
-                String out2 = " <br /> Testing CipherSuites accepted by tartget please wait...<br />";
+                String out2 = "<br>Testing CipherSuites accepted by tartget please wait.................<span id=\"progress\" style=\"white-space:nowrap;\" >progress:</span>";
                 out.write(out2.getBytes());
+                out.write("%".getBytes());
                 out.flush();
+                //String outp1 = "<script>document.getElementById(\"progress\").innerHTML =" + 0 +" </script>";
+                //out.write(outp1.getBytes());
+                //out.flush();
                 int numberOfCiphers = 0;
+                //int percent = 0;
                      for (int j = 0; j < supportedCiphers.length; j++) {
+                    	 int percent = (100*(j+1))/(supportedCiphers.length);
                          System.out.print(" " + (j+1));
                          System.out.print(" Connecting with " + supportedCiphers[j]);
                          //set the current cipher suite as the one for next connection
                          System.setProperty("https.cipherSuites", supportedCiphers[j]);
                          String successfulCipher = "";
+                        //String outp2 = "<script>document.getElementById(\"progress\").innerHTML =" + j +'%'+" </script>";
+                         String outp2 = "<script>document.getElementById(\"progress\").innerHTML =" + percent + "</script>";
+                         out.write(outp2.getBytes());
                          
+                        
+                         out.flush();
                          try {
                          successfulCipher = new Vscan().connectToUrlForCVE(targetUrl);
                          } catch (Exception e) {
@@ -211,20 +230,29 @@ public class ScanResult extends HttpServlet {
                      
                      out.write("</table>".getBytes());
                      out.flush();
+                     
+                     if(numberOfCiphers > 0) {
                      out2 = "<br/> Number of Cipher suites supported by " + targetUrl+ "  with: " + Protocol + ": " + numberOfCiphers + "<br/>";
                      out.write(out2.getBytes());
+                     
                      
                    System.out.println("\n");
                    System.out.println("List of cipher suites supported by the target:");
                    System.out.println(listOfSuccessfulCiphers);
                    System.out.println("\n");
                    System.out.println("Number of cipher suites supported by the target:"+ listOfSuccessfulCiphers.size());
+                    
                    System.out.println("List of vulnerabilities and solution containing work around:");
                    //session.setAttribute("listOfSuccessfulCiphers", listOfSuccessfulCiphers);
                    
                    //out.println("<html><head><title>List of Ciphers used by Target: </title>" + "</head><body><h1 style=\"color:blue;\">List of Ciphers used by Target: </style></h1>" + listOfSuccessfulCiphers +"</body></html>");
                    String l1 = " <br /> List of Ciphers supported by the target: "+ listOfSuccessfulCiphers;
+                     
                    out.write(l1.getBytes());
+                     } else {
+                      	out2 = "<br/> " + targetUrl+ "  does not support " + Protocol + "<br/>";
+                          out.write(out2.getBytes());
+                       }
                    out.write("</div>".getBytes());
                    out.flush();
                    // send the ArrayList containing the list of Successful Ciphers to the CheckWeakCiphers class for evaluation. a

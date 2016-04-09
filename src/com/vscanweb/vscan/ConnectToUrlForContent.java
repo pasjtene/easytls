@@ -1,4 +1,8 @@
 package com.vscanweb.vscan;
+/*
+* @author Pascal Tene
+*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
