@@ -105,6 +105,8 @@ public class VscanServlet extends HttpServlet {
 	    	out.write("<title>SSL/TLS Ciphers Test</title>".getBytes());
 	    	out.write("<script src=\"https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js\"></script>".getBytes());
 	    	out.write("<script src=\"progressbar2.js\"></script>".getBytes());
+	    	out.write(" <script src=\"progressb.js\"></script>".getBytes());
+	    	out.write(" <link rel=\"stylesheet\" type=\"text/css\" href=\"vscanstyle.css\">".getBytes());
 	    	out.write("</head>".getBytes());
 	    	out.write("<body>".getBytes());
 	    	out.write("<div class=\"container\">".getBytes());

@@ -173,13 +173,30 @@ public class ScanResult extends HttpServlet {
                 System.out.println("Testing CipherSuites accepted by tartget please wait...");
                 String out2 = "<br>Testing CipherSuites accepted by tartget please wait.................<span id=\"progress\" style=\"white-space:nowrap;\" >progress:</span>";
                 out.write(out2.getBytes());
-                out.write("%".getBytes());
+                //out.write("%".getBytes());
                 out.flush();
+                
+                //#######
+                //<h1> JavaScript Progress Bar</h1>
+                
+                out.write("<div id=\"myProgress\">".getBytes());
+                out.write("<div id=\"myBar\">".getBytes());
+                out.write("<div id=\"label\">2%</div>".getBytes());
+                out.write("</div>".getBytes());
+                out.write("</div>".getBytes());
+                out.write("<br/>".getBytes());
+                //out.write("<button onclick=\"move()\">Click Me</button>".getBytes());
+                
+                //##########
+                
+                
                 //String outp1 = "<script>document.getElementById(\"progress\").innerHTML =" + 0 +" </script>";
                 //out.write(outp1.getBytes());
                 //out.flush();
                 int numberOfCiphers = 0;
                 //int percent = 0;
+                //out.write("<script>".getBytes());
+                //out.flush();
                      for (int j = 0; j < supportedCiphers.length; j++) {
                     	 int percent = (100*(j+1))/(supportedCiphers.length);
                          System.out.print(" " + (j+1));
@@ -188,10 +205,26 @@ public class ScanResult extends HttpServlet {
                          System.setProperty("https.cipherSuites", supportedCiphers[j]);
                          String successfulCipher = "";
                         //String outp2 = "<script>document.getElementById(\"progress\").innerHTML =" + j +'%'+" </script>";
-                         String outp2 = "<script>document.getElementById(\"progress\").innerHTML =" + percent + "</script>";
-                         out.write(outp2.getBytes());
+                         //String outp2 = "<script>document.getElementById(\"progress\").innerHTML =" + percent + "</script>";
+                         //out.write(outp2.getBytes());
                          
-                        
+                         //Call progress percentage without progress bar
+                         String prog= "<script> progressPercent(" +percent  + ")</script>";
+                         out.write(prog.getBytes());                      
+                         out.flush();
+                         
+                         //String ljs1= "<script> document.getElementById(\"myBar\").style.width = move3(" + percent  +")</script>"; 
+                         
+                         //Call move3 to display progress percentage with progress bar
+                         String ljs1= "<script>progressBar(" + percent  +")</script>"; 
+                         out.write(ljs1.getBytes());
+                         out.flush();
+                         
+                         //String ljs2= "<script> document.getElementById(\"label\").innerHTML =" + percent  +"%"+ "</script>";
+                        // String ljs2= "<script> document.getElementById(\"label\").innerHTML = move3(" +percent  + ")"  +"%"+  " </script>";
+                         String ljs2= "<script>progressBar(" +percent  + ")</script>";
+                         out.write(ljs2.getBytes());
+                         
                          out.flush();
                          try {
                          successfulCipher = new Vscan().connectToUrlForCVE(targetUrl);
@@ -226,10 +259,13 @@ public class ScanResult extends HttpServlet {
                         }
                         
                     } 
+                    
                      out.write("</tbody>".getBytes());    
                      
                      out.write("</table>".getBytes());
-                     out.flush();
+                    out.flush();
+                     //out.write("</script>".getBytes());
+                     //out.flush();
                      
                      if(numberOfCiphers > 0) {
                      out2 = "<br/> Number of Cipher suites supported by " + targetUrl+ "  with: " + Protocol + ": " + numberOfCiphers + "<br/>";
