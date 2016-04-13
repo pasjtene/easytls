@@ -122,7 +122,9 @@ public class Vscan {
                    session.setAttribute("listOfSuccessfulCiphers", listOfSuccessfulCiphers);
                    
                    // send the ArrayList containing the list of Successful Ciphers to the CheckWeakCiphers class for evaluation. a
-                  CheckWeackCiphers.parseTargetCipher(listOfSuccessfulCiphers, protocol);
+                   
+                   //##########
+                  //CheckWeackCiphers.parseTargetCipher(out, listOfSuccessfulCiphers, protocol);
                    // test CBC Vulnerabilities; only check one cipher suite with "CBC"
                    Boolean cbctest = false;
                    for (int k=0; k < listOfSuccessfulCiphers.size(); k++){

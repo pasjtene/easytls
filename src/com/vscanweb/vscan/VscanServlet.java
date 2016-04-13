@@ -73,6 +73,11 @@ public class VscanServlet extends HttpServlet {
 		if(!targetUrl.contains("https://")){
 			targetUrl = "https://"+ targetUrl;
 		}
+		
+		//we remove the URI path from the URL. We only can the host.
+		URL aURL = new URL(targetUrl);
+		String targetUrlHost = aURL.getHost();
+		targetUrl = "https://"+ targetUrlHost;
 
 
 		if (targetUrl.length() > 12){
@@ -104,13 +109,13 @@ public class VscanServlet extends HttpServlet {
 	    	out.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />".getBytes());
 	    	out.write("<title>SSL/TLS Ciphers Test</title>".getBytes());
 	    	out.write("<script src=\"https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js\"></script>".getBytes());
-	    	out.write("<script src=\"progressbar2.js\"></script>".getBytes());
+	    	//out.write("<script src=\"progressbar2.js\"></script>".getBytes());
 	    	out.write(" <script src=\"progressb.js\"></script>".getBytes());
 	    	out.write(" <link rel=\"stylesheet\" type=\"text/css\" href=\"vscanstyle.css\">".getBytes());
 	    	out.write("</head>".getBytes());
 	    	out.write("<body>".getBytes());
 	    	out.write("<div class=\"container\">".getBytes());
-	    	out.write("<h1> Welcome to EasyTLS version 0.5 </h1>".getBytes());
+	    	out.write("<h1> Welcome to EasyTLS version 0.5.413 </h1>".getBytes());
 	    	out.write("<h3>EasyTLS is a user friendly SSL/TLS testing software. Lots of cool new features will be added soon.</h3>".getBytes());
 	    	out.write("<form method = \"post\" action =\"/Vscan/VscanServlet\">".getBytes());
 	    	out.write("<div class=\"form-group\">".getBytes());

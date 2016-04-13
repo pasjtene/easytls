@@ -1,10 +1,12 @@
 package com.vscanweb.vscan;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CheckWeackCiphers {
-	 public static void parseTargetCipher(ArrayList<String> supportedCipherList, String testedProtocol) {
+	 public static void parseTargetCipher(OutputStream out, ArrayList<String> supportedCipherList, String testedProtocol) throws IOException {
 	        //We only run this test if the received supported cipher list is NOT empty.
 	        if (!supportedCipherList.isEmpty()){
 	        ArrayList<String> vulnerabilityCodeList = new ArrayList<String>();
@@ -38,6 +40,7 @@ public class CheckWeackCiphers {
 	        for (String cipherSuite: listOfCiphersAndGrade.keySet()){
 	            if (supportedCipherList.contains(cipherSuite)){
 	            System.out.println(cipherSuite + " Grade " + listOfCiphersAndGrade.get(cipherSuite));
+	            //out.write("In parseTarget".getBytes());
 	        }
 	        }
 	        
@@ -60,6 +63,18 @@ public class CheckWeackCiphers {
 	                    
 	                }
 	            
+	            if (cipherSuite.toLowerCase().contains("cbc") && ((testedProtocol.equalsIgnoreCase("TLSv1.1")) || (testedProtocol.equalsIgnoreCase("TLSv1.2")))  ){
+                    if(!vulnerabilityCodeList.contains("cbctls112"))
+                    vulnerabilityCodeList.add("cbctls112");
+                    
+                }
+	            
+	            if (cipherSuite.toLowerCase().contains("cbc") && ((testedProtocol.equalsIgnoreCase("TLSv1.1")) || (testedProtocol.equalsIgnoreCase("TLSv1.2")) || (testedProtocol.equalsIgnoreCase("TLSv1")) )  ){
+                    if(!vulnerabilityCodeList.contains("cbctls1x"))
+                    vulnerabilityCodeList.add("cbctls1x");
+                    
+                }
+	            
 	            if (testedProtocol.equalsIgnoreCase("SSLv3") && (!vulnerabilityCodeList.contains("sslv3")))
 	                vulnerabilityCodeList.add("sslv3");
 	            
@@ -70,7 +85,7 @@ public class CheckWeackCiphers {
 	       ConnectDB conn = new ConnectDB();
 	       conn.connectToDB();
 	       //Call execSQL with the list of codes that will be checked before display
-	       conn.execSQL(vulnerabilityCodeList);
+	       conn.execSQL(out, vulnerabilityCodeList);
 	       } catch (Exception e) {
 		     System.out.println("Cannot connect to the database.");
 	       }     
